@@ -1,6 +1,7 @@
-frontend-nanodegree-arcade-game
+Arcade Game Project: Frogger
 ===============================
 
-Students should use this rubric: https://www.udacity.com/course/viewer#!/c-ud015/l-3072058665/m-3072588797
+Project 3 in Frond-End Developer Nanodegree program from Udacity.
 
-for self-checking their submission.
+See requirements [here](https://www.udacity.com/course/viewer#!/c-ud015/l-3072058665/m-3072588797)
+
