@@ -1,3 +1,11 @@
+// coordinates grid
+var canvas_width = 505,
+    canvas_height = 606,
+    tile_width = 101,
+    tile_height = 83,
+    tile_real_height = 171;
+    top_offset = -30;
+
 // Enemies our player must avoid
 var Enemy = function(x, y, speed) {
     // Variables applied to each of our instances go here,
@@ -40,7 +48,7 @@ var Player = function (x, y, speed) {
     this.speed = speed;
 };
 
-Player.prototype.update = function(dt) {
+Player.prototype.update = function() {
 
 };
 
@@ -49,18 +57,32 @@ Player.prototype.render = function() {
 };
 
 Player.prototype.handleInput = function(direction) {
+    if (direction === 'left' && this.x > 0 ) {
+        this.x -= tile_width;
+    }
 
+    if (direction === 'right' && this.x + tile_width < canvas_width) {
+        this.x += tile_width;
+    }
+
+    if (direction === 'up' && this.y > top_offset + 0 * tile_height) {
+        this.y -= tile_height;
+    }
+
+    if (direction === 'down' && this.y < top_offset + 5 * tile_height) {
+        this.y += tile_height;
+    }
 };
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var enemy1 = new Enemy(-101, 50, 10);
-var enemy2 = new Enemy(0, 100, 10);
-var enemy3 = new Enemy(101, 150, 10);
+var enemy1 = new Enemy(-1 * tile_width, top_offset + 1 * tile_height, 10);
+var enemy2 = new Enemy(0 * tile_width, top_offset + 2 * tile_height, 10);
+var enemy3 = new Enemy(1 * tile_width, top_offset + 3 * tile_height, 10);
 var allEnemies = [enemy1, enemy2, enemy3];
 
-var player = new Player(200, 400, 10);
+var player = new Player(2 * tile_width, top_offset + 5 * tile_height, 10);
 
 
 // This listens for key presses and sends the keys to your
