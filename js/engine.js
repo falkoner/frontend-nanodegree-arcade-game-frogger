@@ -79,6 +79,9 @@ var Engine = (function(global) {
      * on the entities themselves within your app.js file).
      */
     function update(dt) {
+        // prevent visual artifacts when player reaches top row
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+
         updateEntities(dt);
         // checkCollisions();
     }
