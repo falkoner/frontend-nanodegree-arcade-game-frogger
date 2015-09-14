@@ -14,9 +14,13 @@ var Enemy = function(x, y, speed) {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-    this.x = x;
-    this.y = y;
-    this.speed = speed;
+    this.starting_x = x;
+    this.starting_y = y;
+    this.starting_speed = speed;
+    this.width = tile_width;
+    this.height = tile_height;
+
+    this.reset();
 };
 
 // Update the enemy's position, required method for game
@@ -28,8 +32,8 @@ Enemy.prototype.update = function(dt) {
     this.x += this.speed * dt;
 
     // Wrap the line
-    if (this.x > 505) {
-        this.x = 0;
+    if (this.x > canvas_width) {
+        this.x = 0 - this.width;
     }
 };
 
@@ -38,14 +42,24 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+Enemy.prototype.reset = function() {
+    this.x = this.starting_x;
+    this.y = this.starting_y;
+    this.speed = this.starting_speed;
+};
+
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function (x, y, speed) {
     this.sprite = 'images/char-boy.png';
-    this.x = x;
-    this.y = y;
-    this.speed = speed;
+    this.starting_x = x;
+    this.starting_y = y;
+    this.starting_speed = speed;
+    this.width = tile_width;
+    this.height = tile_height;
+
+    this.reset();
 };
 
 Player.prototype.update = function() {
@@ -72,6 +86,12 @@ Player.prototype.handleInput = function(direction) {
     if (direction === 'down' && this.y < top_offset + 5 * tile_height) {
         this.y += tile_height;
     }
+};
+
+Player.prototype.reset = function() {
+    this.x = this.starting_x;
+    this.y = this.starting_y;
+    this.speed = this.starting_speed;
 };
 
 // Now instantiate your objects.

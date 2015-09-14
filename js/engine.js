@@ -83,7 +83,8 @@ var Engine = (function(global) {
         ctx.clearRect(0,0,canvas.width,canvas.height);
 
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
+        checkWinningConditions();
     }
 
     /* This is called by the update function  and loops through all of the
@@ -99,6 +100,35 @@ var Engine = (function(global) {
         });
         player.update();
     }
+
+    function checkCollisions() {
+        allEnemies.forEach(function(enemy) {
+            if (checkCollision(player, enemy) === true) {
+                reset();
+            }
+        });
+
+    }
+
+    function checkCollision(entity1, entity2) {
+        if (entity1.x < entity2.x + entity2.width &&
+            entity1.x + entity1.width > entity2.x &&
+            entity1.y < entity2.y + entity2.height &&
+            entity1.height + entity1.y > entity2.y) {
+
+            return true;
+        }
+
+        return false;
+    }
+
+    function checkWinningConditions() {
+        if (player.y < top_offset + 1 * tile_height) {
+            console.log('You won');
+            reset();
+        }
+    }
+
 
     /* This function initially draws the "game level", it will then call
      * the renderEntities function. Remember, this function is called every
@@ -163,7 +193,13 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // noop
+        console.log("We are starting again!");
+        player.reset();
+
+        // uncomment to reset bugs after collision
+        // allEnemies.forEach(function(enemy) {
+        //     enemy.reset();
+        // });
     }
 
     /* Go ahead and load all of the images we know we're going to need to
