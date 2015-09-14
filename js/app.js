@@ -6,14 +6,14 @@ var canvas_width = 505,
     tile_real_height = 171;
     top_offset = -30;
 
-// Enemies our player must avoid
-var Enemy = function(x, y, speed) {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
+inherit = function(subClass,superClass) {
+   subClass.prototype = Object.create(superClass.prototype); // delegate to prototype
+   subClass.prototype.constructor = subClass; // set constructor on prototype
+};
 
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
-    this.sprite = 'images/enemy-bug.png';
+// something that can move
+var Actor = function(x,y,speed) {
+    this.sprite = '';
     this.starting_x = x;
     this.starting_y = y;
     this.starting_speed = speed;
@@ -23,52 +23,60 @@ var Enemy = function(x, y, speed) {
     this.reset();
 };
 
+Actor.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+Actor.prototype.reset = function() {
+    this.x = this.starting_x;
+    this.y = this.starting_y;
+    this.speed = this.starting_speed;
+};
+
+// any on tick updates we want to do with Actor
+Actor.prototype.update = function() {
+    // do nothing by default
+};
+
+// ------------------------------
+
+// Enemies our player must avoid
+var Enemy = function(x, y, speed) {
+    // The image/sprite for our enemies, this uses
+    // a helper we've provided to easily load images
+    Actor.call(this, x, y, speed);
+    this.sprite = 'images/enemy-bug.png';
+};
+
+inherit(Enemy, Actor);
+
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
+// overriding default method
 Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
     this.x += this.speed * dt;
 
-    // Wrap the line
+    // Wrap the line movement
     if (this.x > canvas_width) {
         this.x = 0 - this.width;
     }
 };
 
-// Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
+// ------------------------------
 
-Enemy.prototype.reset = function() {
-    this.x = this.starting_x;
-    this.y = this.starting_y;
-    this.speed = this.starting_speed;
-};
 
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function (x, y, speed) {
+    Actor.call(this, x, y, speed);
     this.sprite = 'images/char-boy.png';
-    this.starting_x = x;
-    this.starting_y = y;
-    this.starting_speed = speed;
-    this.width = tile_width;
-    this.height = tile_height;
-
-    this.reset();
 };
 
-Player.prototype.update = function() {
-
-};
-
-Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
+inherit(Player, Actor);
 
 Player.prototype.handleInput = function(direction) {
     if (direction === 'left' && this.x > 0 ) {
@@ -88,21 +96,20 @@ Player.prototype.handleInput = function(direction) {
     }
 };
 
-Player.prototype.reset = function() {
-    this.x = this.starting_x;
-    this.y = this.starting_y;
-    this.speed = this.starting_speed;
-};
+// ------------------------------
+
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var enemy1 = new Enemy(-1 * tile_width, top_offset + 1 * tile_height, 10);
-var enemy2 = new Enemy(0 * tile_width, top_offset + 2 * tile_height, 10);
-var enemy3 = new Enemy(1 * tile_width, top_offset + 3 * tile_height, 10);
+var enemy1 = new Enemy(0 * tile_width, top_offset + 1 * tile_height, 10);
+var enemy2 = new Enemy(-1 * tile_width, top_offset + 2 * tile_height, 10);
+var enemy3 = new Enemy(0 * tile_width, top_offset + 3 * tile_height, 10);
 var allEnemies = [enemy1, enemy2, enemy3];
 
 var player = new Player(2 * tile_width, top_offset + 5 * tile_height, 10);
+
+// ------------------------------
 
 
 // This listens for key presses and sends the keys to your
@@ -117,3 +124,4 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
