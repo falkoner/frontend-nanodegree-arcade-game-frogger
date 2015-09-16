@@ -101,6 +101,7 @@ var Engine = (function(global) {
         player.update();
     }
 
+    // check collisions of Player with each Enemy on each tick
     function checkCollisions() {
         allEnemies.forEach(function(enemy) {
             if (checkCollision(player, enemy) === true) {
@@ -110,9 +111,12 @@ var Engine = (function(global) {
 
     }
 
+    // universal method for collision detection between two entities
     function checkCollision(entity1, entity2) {
-        if (entity1.x < entity2.x + entity2.width &&
-            entity1.x + entity1.width > entity2.x &&
+        // using Axis-Aligned Bounding Box
+        // additional 10 pixels are to smooth horizontal collisions
+        if (entity1.x +10 < entity2.x + entity2.width &&
+            entity1.x + entity1.width > entity2.x + 10 &&
             entity1.y < entity2.y + entity2.height &&
             entity1.height + entity1.y > entity2.y) {
 
@@ -122,6 +126,7 @@ var Engine = (function(global) {
         return false;
     }
 
+    // checking if Player wins on each tick
     function checkWinningConditions() {
         if (player.y < top_offset + 1 * tile_height) {
             console.log('You won');

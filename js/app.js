@@ -6,12 +6,13 @@ var canvas_width = 505,
     tile_real_height = 171;
     top_offset = -30;
 
+// service function to streamline class inheritance
 inherit = function(subClass,superClass) {
    subClass.prototype = Object.create(superClass.prototype); // delegate to prototype
    subClass.prototype.constructor = subClass; // set constructor on prototype
 };
 
-// something that can move
+// something that can move is an Actor
 var Actor = function(x,y,speed) {
     this.sprite = '';
     this.starting_x = x;
@@ -23,10 +24,12 @@ var Actor = function(x,y,speed) {
     this.reset();
 };
 
+// display function
 Actor.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+// used to initilize instance and after instance is dead
 Actor.prototype.reset = function() {
     this.x = this.starting_x;
     this.y = this.starting_y;
@@ -52,7 +55,7 @@ inherit(Enemy, Actor);
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
-// overriding default method
+// Overriding default method
 Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
@@ -78,6 +81,8 @@ var Player = function (x, y, speed) {
 
 inherit(Player, Actor);
 
+// handles cell by cell movement and
+// limits movements
 Player.prototype.handleInput = function(direction) {
     if (direction === 'left' && this.x > 0 ) {
         this.x -= tile_width;
@@ -99,13 +104,18 @@ Player.prototype.handleInput = function(direction) {
 // ------------------------------
 
 
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
-var enemy1 = new Enemy(0 * tile_width, top_offset + 1 * tile_height, 10);
-var enemy2 = new Enemy(-1 * tile_width, top_offset + 2 * tile_height, 10);
-var enemy3 = new Enemy(0 * tile_width, top_offset + 3 * tile_height, 10);
-var allEnemies = [enemy1, enemy2, enemy3];
+// instantiate player and enemies
+var allEnemies = [];
+
+// change x to update number of enemies per row
+for (var row = 1; row <= 3; row++) {
+        for (var x = 1; x <= 2; x++) {
+            random_column = Math.floor((Math.random() * 4) + -1);
+            random_speed = Math.floor((Math.random() * 200) + 50);
+            var enemy = new Enemy(random_column * tile_width, top_offset + row * tile_height, random_speed);
+            allEnemies.push(enemy);
+        }
+}
 
 var player = new Player(2 * tile_width, top_offset + 5 * tile_height, 10);
 
