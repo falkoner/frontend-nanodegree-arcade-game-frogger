@@ -70,7 +70,7 @@ gulp.task('browse', function(){
     });
 
     gulp.watch(paths.scripts).on("change", browserSync.reload);
-    gulp.watch(paths.stylesheets).on("change", browserSync.reload);
+    gulp.watch(paths.css).on("change", browserSync.reload);
     gulp.watch(paths.content).on("change", browserSync.reload);
     gulp.watch(paths.images).on("change", browserSync.reload);
     gulp.watch(paths.icons).on("change", browserSync.reload);
