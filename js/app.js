@@ -1,20 +1,22 @@
 // coordinates grid
-var CANVAS_WIDTH = 505,
-    CANVAS_HEIGHT = 606,
+var GAME_FIELD_ROWS = 8,   // should be 4 and up
+    GAME_FIELD_COLUMNS = 8,
     TILE_WIDTH = 101,
     TILE_HEIGHT = 83,
     TILE_REAL_HEIGHT = 171,
     TOP_OFFSET = -30,
-    NUM_ENEMIES_PER_ROW = 2;
+    NUM_ENEMIES_PER_ROW = 2,
+    CANVAS_WIDTH = TILE_WIDTH * GAME_FIELD_COLUMNS,
+    CANVAS_HEIGHT = TILE_REAL_HEIGHT + (TILE_HEIGHT * GAME_FIELD_ROWS - 1 );
 
 // service function to streamline class inheritance
-var inherit = function(subClass,superClass) {
+var inherit = function(subClass, superClass) {
    subClass.prototype = Object.create(superClass.prototype); // delegate to prototype
    subClass.prototype.constructor = subClass; // set constructor on prototype
 };
 
 // something that can move is an Actor
-var Actor = function(x,y,speed) {
+var Actor = function(x, y, speed) {
     this.sprite = '';
     this.starting_x = x;
     this.starting_y = y;
@@ -97,7 +99,7 @@ Player.prototype.handleInput = function(direction) {
         this.y -= TILE_HEIGHT;
     }
 
-    if (direction === 'down' && this.y < TOP_OFFSET + 5 * TILE_HEIGHT) {
+    if (direction === 'down' && this.y < TOP_OFFSET + (GAME_FIELD_ROWS - 1 ) * TILE_HEIGHT) {
         this.y += TILE_HEIGHT;
     }
 };
@@ -109,16 +111,20 @@ Player.prototype.handleInput = function(direction) {
 var allEnemies = [];
 
 // each row has NUM_ENEMIES_PER_ROW enemies
-for (var row = 1; row <= 3; row++) {
+for (var row = 1; row <= GAME_FIELD_ROWS - 3; row++) {
         for (var x = 1; x <= NUM_ENEMIES_PER_ROW; x++) {
-            var random_column = Math.floor((Math.random() * 4) + -1);
+            var random_column = Math.floor((Math.random() * 4) + - 1);
             var random_speed = Math.floor((Math.random() * 200) + 50);
-            var enemy = new Enemy(random_column * TILE_WIDTH, TOP_OFFSET + row * TILE_HEIGHT, random_speed);
+
+            var enemy = new Enemy(random_column * TILE_WIDTH,
+                TOP_OFFSET + row * TILE_HEIGHT, random_speed);
+
             allEnemies.push(enemy);
         }
 }
 
-var player = new Player(2 * TILE_WIDTH, TOP_OFFSET + 5 * TILE_HEIGHT, 10);
+var player = new Player(Math.floor(GAME_FIELD_COLUMNS / 2) * TILE_WIDTH,
+    TOP_OFFSET + (GAME_FIELD_ROWS - 1) * TILE_HEIGHT, 10);
 
 // ------------------------------
 

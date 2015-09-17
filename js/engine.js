@@ -80,7 +80,7 @@ var Engine = (function(global) {
      */
     function update(dt) {
         // prevent visual artifacts when player reaches top row
-        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.clearRect(0, 0 , canvas.width, canvas.height);
 
         updateEntities(dt);
         checkCollisions();
@@ -115,7 +115,7 @@ var Engine = (function(global) {
     function checkCollision(entity1, entity2) {
         // using Axis-Aligned Bounding Box
         // additional 10 pixels are to smooth horizontal collisions
-        if (entity1.x +10 < entity2.x + entity2.width &&
+        if (entity1.x + 10 < entity2.x + entity2.width &&
             entity1.x + entity1.width > entity2.x + 10 &&
             entity1.y < entity2.y + entity2.height &&
             entity1.height + entity1.y > entity2.y) {
@@ -134,7 +134,6 @@ var Engine = (function(global) {
         }
     }
 
-
     /* This function initially draws the "game level", it will then call
      * the renderEntities function. Remember, this function is called every
      * game tick (or loop of the game engine) because that's how games work -
@@ -146,23 +145,24 @@ var Engine = (function(global) {
          * for that particular row of the game level.
          */
         var rowImages = [
-                'images/water-block.png',   // Top row is water
-                'images/stone-block.png',   // Row 1 of 3 of stone
-                'images/stone-block.png',   // Row 2 of 3 of stone
-                'images/stone-block.png',   // Row 3 of 3 of stone
-                'images/grass-block.png',   // Row 1 of 2 of grass
-                'images/grass-block.png'    // Row 2 of 2 of grass
+                'images/water-block.png'   // Top row is water
             ],
-            numRows = 6,
-            numCols = 5,
             row, col;
+
+        // most of the rows are stone
+        for (var i = 2; i <= GAME_FIELD_ROWS - 2; i++) {
+            rowImages.push('images/stone-block.png');
+        }
+
+        rowImages.push('images/grass-block.png'); // Row 1 of 2 of grass
+        rowImages.push('images/grass-block.png'); // Row 2 of 2 of grass
 
         /* Loop through the number of rows and columns we've defined above
          * and, using the rowImages array, draw the correct image for that
          * portion of the "grid"
          */
-        for (row = 0; row < numRows; row++) {
-            for (col = 0; col < numCols; col++) {
+        for (row = 0; row < GAME_FIELD_ROWS; row++) {
+            for (col = 0; col < GAME_FIELD_COLUMNS; col++) {
                 /* The drawImage function of the canvas' context element
                  * requires 3 parameters: the image to draw, the x coordinate
                  * to start drawing and the y coordinate to start drawing.
@@ -170,10 +170,9 @@ var Engine = (function(global) {
                  * so that we get the benefits of caching these images, since
                  * we're using them over and over.
                  */
-                ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
+                ctx.drawImage(Resources.get(rowImages[row]), col * TILE_WIDTH, row * TILE_HEIGHT);
             }
         }
-
 
         renderEntities();
     }
