@@ -1,13 +1,14 @@
 // coordinates grid
-var canvas_width = 505,
-    canvas_height = 606,
-    tile_width = 101,
-    tile_height = 83,
-    tile_real_height = 171;
-    top_offset = -30;
+var CANVAS_WIDTH = 505,
+    CANVAS_HEIGHT = 606,
+    TILE_WIDTH = 101,
+    TILE_HEIGHT = 83,
+    TILE_REAL_HEIGHT = 171,
+    TOP_OFFSET = -30,
+    NUM_ENEMIES_PER_ROW = 2;
 
 // service function to streamline class inheritance
-inherit = function(subClass,superClass) {
+var inherit = function(subClass,superClass) {
    subClass.prototype = Object.create(superClass.prototype); // delegate to prototype
    subClass.prototype.constructor = subClass; // set constructor on prototype
 };
@@ -18,8 +19,8 @@ var Actor = function(x,y,speed) {
     this.starting_x = x;
     this.starting_y = y;
     this.starting_speed = speed;
-    this.width = tile_width;
-    this.height = tile_height;
+    this.width = TILE_WIDTH;
+    this.height = TILE_HEIGHT;
 
     this.reset();
 };
@@ -38,7 +39,7 @@ Actor.prototype.reset = function() {
 
 // any on tick updates we want to do with Actor
 Actor.prototype.update = function() {
-    // do nothing by default
+    // no op
 };
 
 // ------------------------------
@@ -63,7 +64,7 @@ Enemy.prototype.update = function(dt) {
     this.x += this.speed * dt;
 
     // Wrap the line movement
-    if (this.x > canvas_width) {
+    if (this.x > CANVAS_WIDTH) {
         this.x = 0 - this.width;
     }
 };
@@ -85,19 +86,19 @@ inherit(Player, Actor);
 // limits movements
 Player.prototype.handleInput = function(direction) {
     if (direction === 'left' && this.x > 0 ) {
-        this.x -= tile_width;
+        this.x -= TILE_WIDTH;
     }
 
-    if (direction === 'right' && this.x + tile_width < canvas_width) {
-        this.x += tile_width;
+    if (direction === 'right' && this.x + TILE_WIDTH < CANVAS_WIDTH) {
+        this.x += TILE_WIDTH;
     }
 
-    if (direction === 'up' && this.y > top_offset + 0 * tile_height) {
-        this.y -= tile_height;
+    if (direction === 'up' && this.y > TOP_OFFSET + 0 * TILE_HEIGHT) {
+        this.y -= TILE_HEIGHT;
     }
 
-    if (direction === 'down' && this.y < top_offset + 5 * tile_height) {
-        this.y += tile_height;
+    if (direction === 'down' && this.y < TOP_OFFSET + 5 * TILE_HEIGHT) {
+        this.y += TILE_HEIGHT;
     }
 };
 
@@ -107,17 +108,17 @@ Player.prototype.handleInput = function(direction) {
 // instantiate player and enemies
 var allEnemies = [];
 
-// change x to update number of enemies per row
+// each row has NUM_ENEMIES_PER_ROW enemies
 for (var row = 1; row <= 3; row++) {
-        for (var x = 1; x <= 2; x++) {
-            random_column = Math.floor((Math.random() * 4) + -1);
-            random_speed = Math.floor((Math.random() * 200) + 50);
-            var enemy = new Enemy(random_column * tile_width, top_offset + row * tile_height, random_speed);
+        for (var x = 1; x <= NUM_ENEMIES_PER_ROW; x++) {
+            var random_column = Math.floor((Math.random() * 4) + -1);
+            var random_speed = Math.floor((Math.random() * 200) + 50);
+            var enemy = new Enemy(random_column * TILE_WIDTH, TOP_OFFSET + row * TILE_HEIGHT, random_speed);
             allEnemies.push(enemy);
         }
 }
 
-var player = new Player(2 * tile_width, top_offset + 5 * tile_height, 10);
+var player = new Player(2 * TILE_WIDTH, TOP_OFFSET + 5 * TILE_HEIGHT, 10);
 
 // ------------------------------
 

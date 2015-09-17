@@ -25,8 +25,8 @@ var Engine = (function(global) {
         ctx = canvas.getContext('2d'),
         lastTime;
 
-    canvas.width = 505;
-    canvas.height = 606;
+    canvas.width = CANVAS_WIDTH;
+    canvas.height = CANVAS_HEIGHT;
     doc.body.appendChild(canvas);
 
     /* This function serves as the kickoff point for the game loop itself
@@ -128,7 +128,7 @@ var Engine = (function(global) {
 
     // checking if Player wins on each tick
     function checkWinningConditions() {
-        if (player.y < top_offset + 1 * tile_height) {
+        if (player.y < TOP_OFFSET + 1 * TILE_HEIGHT) {
             console.log('You won');
             reset();
         }
