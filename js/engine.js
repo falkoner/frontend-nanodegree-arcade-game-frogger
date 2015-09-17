@@ -79,9 +79,6 @@ var Engine = (function(global) {
      * on the entities themselves within your app.js file).
      */
     function update(dt) {
-        // prevent visual artifacts when player reaches top row
-        ctx.clearRect(0, 0 , canvas.width, canvas.height);
-
         updateEntities(dt);
         checkCollisions();
         checkWinningConditions();
@@ -141,6 +138,9 @@ var Engine = (function(global) {
      * they are just drawing the entire screen over and over.
      */
     function render() {
+        // prevent visual artifacts when player reaches top row
+        ctx.clearRect(0, 0 , canvas.width, canvas.height);
+
         /* This array holds the relative URL to the image used
          * for that particular row of the game level.
          */
